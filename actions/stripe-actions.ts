@@ -1,4 +1,4 @@
-import { updateProfile, updateProfileByStripeCustomerId } from "@/db/queries/profile-queries";
+import { updateProfile, updateProfileByStripeCustomerId } from "@/db/queries/profiles-queries";
 import { SelectProfile } from "@/db/schema";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";

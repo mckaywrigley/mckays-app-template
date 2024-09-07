@@ -22,8 +22,7 @@ If the user gets stuck, refer them to the following links:
 Make sure the user knows to run the following scripts:
 
 ```bash
-npx create-next-app@latest my-app --typescript --tailwind --eslint
-npx shadcn-ui@latest init
+npx shadcn@latest init
 npx shadcn-ui@latest add
 ```
 

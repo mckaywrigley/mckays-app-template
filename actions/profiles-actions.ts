@@ -1,7 +1,7 @@
 "use server";
 
-import { createProfile, deleteProfile, getAllProfiles, getProfileByUserId, updateProfile } from "@/db/queries/profile-queries";
-import { InsertProfile } from "@/db/schema/profile-schema";
+import { createProfile, deleteProfile, getAllProfiles, getProfileByUserId, updateProfile } from "@/db/queries/profiles-queries";
+import { InsertProfile } from "@/db/schema/profiles-schema";
 import { ActionState } from "@/types";
 import { revalidatePath } from "next/cache";
 

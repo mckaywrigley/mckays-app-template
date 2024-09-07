@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
-export const todos = pgTable("todos", {
+export const todosTable = pgTable("todos", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").notNull(),
   content: text("content").notNull(),
@@ -12,5 +12,5 @@ export const todos = pgTable("todos", {
     .$onUpdate(() => new Date())
 });
 
-export type InsertTodo = typeof todos.$inferInsert;
-export type SelectTodo = typeof todos.$inferSelect;
+export type InsertTodo = typeof todosTable.$inferInsert;
+export type SelectTodo = typeof todosTable.$inferSelect;

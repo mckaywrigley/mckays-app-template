@@ -2,11 +2,11 @@
 
 import { db } from "@/db/db";
 import { eq } from "drizzle-orm";
-import { InsertTodo, SelectTodo, todos } from "../schema/todo-schema";
+import { InsertTodo, SelectTodo, todosTable } from "../schema/todos-schema";
 
 export const createTodo = async (data: InsertTodo) => {
   try {
-    const [newTodo] = await db.insert(todos).values(data).returning();
+    const [newTodo] = await db.insert(todosTable).values(data).returning();
     return newTodo;
   } catch (error) {
     console.error("Error creating todo:", error);
@@ -17,7 +17,7 @@ export const createTodo = async (data: InsertTodo) => {
 export const getTodos = async (userId: string): Promise<SelectTodo[]> => {
   try {
     return db.query.todos.findMany({
-      where: eq(todos.userId, userId)
+      where: eq(todosTable.userId, userId)
     });
   } catch (error) {
     console.error("Error getting todos:", error);
@@ -28,7 +28,7 @@ export const getTodos = async (userId: string): Promise<SelectTodo[]> => {
 export const getTodo = async (id: string) => {
   try {
     const todo = await db.query.todos.findFirst({
-      where: eq(todos.id, id)
+      where: eq(todosTable.id, id)
     });
     if (!todo) {
       throw new Error("Todo not found");
@@ -42,7 +42,7 @@ export const getTodo = async (id: string) => {
 
 export const updateTodo = async (id: string, data: Partial<InsertTodo>) => {
   try {
-    const [updatedTodo] = await db.update(todos).set(data).where(eq(todos.id, id)).returning();
+    const [updatedTodo] = await db.update(todosTable).set(data).where(eq(todosTable.id, id)).returning();
     return updatedTodo;
   } catch (error) {
     console.error("Error updating todo:", error);
@@ -52,7 +52,7 @@ export const updateTodo = async (id: string, data: Partial<InsertTodo>) => {
 
 export const deleteTodo = async (id: string) => {
   try {
-    await db.delete(todos).where(eq(todos.id, id));
+    await db.delete(todosTable).where(eq(todosTable.id, id));
   } catch (error) {
     console.error("Error deleting todo:", error);
     throw new Error("Failed to delete todo");

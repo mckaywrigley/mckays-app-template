@@ -1,6 +1,6 @@
 "use client";
 
-import { createTodoAction, deleteTodoAction, updateTodoAction } from "@/actions/todo-actions";
+import { createTodoAction, deleteTodoAction, updateTodoAction } from "@/actions/todos-actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";

@@ -1,7 +1,7 @@
 import Header from "@/components/header";
 import { Toaster } from "@/components/ui/toaster";
 import { Providers } from "@/components/utilities/providers";
-import { createProfile, getProfileByUserId } from "@/db/queries/profile-queries";
+import { createProfile, getProfileByUserId } from "@/db/queries/profiles-queries";
 import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";

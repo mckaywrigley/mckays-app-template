@@ -1,6 +1,6 @@
 import { TodoList } from "@/components/todo-list";
-import { getProfileByUserId } from "@/db/queries/profile-queries";
-import { getTodos } from "@/db/queries/todo-queries";
+import { getProfileByUserId } from "@/db/queries/profiles-queries";
+import { getTodos } from "@/db/queries/todos-queries";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 

@@ -1,7 +1,7 @@
 "use server";
 
-import { createTodo, deleteTodo, getTodo, getTodos, updateTodo } from "@/db/queries/todo-queries";
-import { InsertTodo } from "@/db/schema/todo-schema";
+import { createTodo, deleteTodo, getTodo, getTodos, updateTodo } from "@/db/queries/todos-queries";
+import { InsertTodo } from "@/db/schema/todos-schema";
 import { ActionState } from "@/types";
 import { revalidatePath } from "next/cache";
 

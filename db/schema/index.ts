@@ -1,2 +1,2 @@
-export * from "./profile-schema";
-export * from "./todo-schema";
+export * from "./profiles-schema";
+export * from "./todos-schema";
