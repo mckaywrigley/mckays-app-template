@@ -24,8 +24,6 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup
-NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
 ```
 
 ## Install Libraries
@@ -44,7 +42,7 @@ npm i @clerk/nextjs @clerk/themes @clerk/backend
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher([]);
+const isProtectedRoute = createRouteMatcher(["/todo(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId, redirectToSignIn } = auth();
@@ -65,12 +63,22 @@ export const config = {
 };
 ```
 
-- Wrap `<ClerkProvider>` around the entire `html` tag in the `app/layout.tsx` file with the following code:
+- Wrap `<ClerkProvider>` around the entire `html` tag in the `app/layout.tsx` file with the following code and make it async with a profile creation check:
 
 ```tsx
 import { ClerkProvider } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { userId } = auth();
+
+  if (userId) {
+    const profile = await getProfileByUserId(userId);
+    if (!profile) {
+      await createProfile({ userId });
+    }
+  }
+
   return <ClerkProvider>{/* ...add existing code here... */}</ClerkProvider>;
 }
 ```
