@@ -19,7 +19,7 @@ Todo is a web app that allows you to manage your todos.
 
 Follow these rules:
 
-- All components should go in `/components` and be named like `example-component.tsx` unless otherwise specified
-- All actions should go in `/actions` and be named like `example-actions.ts` unless otherwise specified
-- All schemas should go in `/db/schema` and be named like `example-schema.ts` unless otherwise specified
-- All queries should go in `/db/queries` and be named like `example-queries.ts` unless otherwise specified
+- All components should go in `/components` from the root and be named like `example-component.tsx` unless otherwise specified
+- All actions should go in `/actions` from the root and be named like `example-actions.ts` unless otherwise specified
+- All schemas should go in `/db/schema` from the root and be named like `example-schema.ts` unless otherwise specified
+- All queries should go in `/db/queries` from the root and be named like `example-queries.ts` unless otherwise specified
