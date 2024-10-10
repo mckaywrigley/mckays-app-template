@@ -1,3 +1,5 @@
+"use server";
+
 interface AuthLayoutProps {
   children: React.ReactNode;
 }

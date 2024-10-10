@@ -1,5 +1,5 @@
 {
-  "name": "prompting-test-project",
+  "name": "mckays-app-template",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,8 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "clean": "npm run lint:fix && npm run format:write",
+    "type-check": "tsc --noEmit",
+    "lint:fix": "next lint --fix",
+    "format:write": "prettier --write \"{app,lib,db,components,context,types}/**/*.{ts,tsx}\" --cache",
+    "format:check": "prettier --check \"{app,lib,db,components,context,types}**/*.{ts,tsx}\" --cache",
+    "analyze": "ANALYZE=true npm run build",
     "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate"
+    "db:migrate": "npx drizzle-kit migrate",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@clerk/backend": "^1.9.0",
@@ -46,7 +53,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
-    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
     "embla-carousel-react": "^8.2.0",
     "framer-motion": "^11.3.30",
@@ -69,13 +75,19 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.24.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-tailwindcss": "^3.17.5",
+    "husky": "^9.1.6",
     "postcss": "^8",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

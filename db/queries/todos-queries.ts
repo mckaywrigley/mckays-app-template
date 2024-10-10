@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db/db";
+import { InsertTodo, SelectTodo, todosTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { InsertTodo, SelectTodo, todosTable } from "../schema/todos-schema";
 
 export const createTodo = async (data: InsertTodo) => {
   try {

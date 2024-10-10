@@ -1,4 +1,6 @@
-import { TodoList } from "@/components/todo-list";
+"use server";
+
+import { TodoList } from "@/app/todo/_components/todo-list";
 import { getProfileByUserId } from "@/db/queries/profiles-queries";
 import { getTodos } from "@/db/queries/todos-queries";
 import { auth } from "@clerk/nextjs/server";
