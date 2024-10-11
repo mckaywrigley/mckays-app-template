@@ -1,25 +1,475 @@
-# Project Specification & Guidelines
+# Project Instructions
 
-Use the project specification and guidelines to build the Todo app.
+Use the project specification and guidelines as you build the todo app.
+
+Write the complete code for every step. Do not get lazy.
+
+Your goal is to completely finish whatever the user asks for.
 
 ## Overview
 
-Todo is a web app that allows you to manage your todos.
+Todo app is a web app that allows you to manage your todos.
 
 ## Tech Stack
 
 - Frontend: Next.js, Tailwind, Shadcn, Framer Motion
-- Backend: Supabase, Drizzle, Server Actions
+- Backend: Postgres, Supabase, Drizzle ORM, Server Actions
 - Auth: Clerk
 - Payments: Stripe
+- Deployment: Vercel
 
-## Specification
+## Project Structure
 
-## Guidelines
+### General Structure
 
-Follow these rules:
+- `actions` - Server actions
+  - `db` - Database related actions
+  - Other actions
+- `app` - Next.js app router
+  - `api` - API routes
+  - `route` - An example route (each of these are only if needed)
+    - `_components` - One-off components for the route
+    - `layout.tsx` - Layout for the route
+    - `page.tsx` - Page for the route
+- `components` - Shared components
+  - `ui` - UI components
+  - `utilities` - Utility components
+- `db` - Database
+  - `migrations` - Database migrations (you never have to do anything in here)
+  - `queries` - Database queries
+  - `schema` - Database schemas
+- `lib` - Library code
+  - `hooks` - Custom hooks
+- `prompts` - Prompt files
+- `public` - Static assets
+- `types` - Type definitions
 
-- All components should go in `/components` from the root and be named like `example-component.tsx` unless otherwise specified
-- All actions should go in `/actions` from the root and be named like `example-actions.ts` unless otherwise specified
-- All schemas should go in `/db/schema` from the root and be named like `example-schema.ts` unless otherwise specified
-- All queries should go in `/db/queries` from the root and be named like `example-queries.ts` unless otherwise specified
+### Project Specific Structure
+
+## Rules
+
+Follow these rules when building the project.
+
+### General Rules
+
+- Use `@` to import anything from the project unless otherwise specified
+- Use kebab case for all files and folders unless otherwise specified
+
+#### Env Rules
+
+- If you update environment variables, update the `.env.example` file
+- All environment variables should go in `.env.local`
+- Do not expose environment variables to the frontend
+- Use `NEXT_PUBLIC_` prefix for environment variables that need to be accessed from the frontend
+- You may import environment variables in server actions and components by using `process.env.VARIABLE_NAME`
+
+#### Type Rules
+
+Follow these rules when working with types.
+
+- When importing types, use `@/types`
+- Name files like `example-types.ts`
+- All types should go in `types`
+- Make sure to export the types in `types/index.ts`
+- Prefer interfaces over type aliases
+- If referring to db types, use `@/db/schema` such as `SelectTodo` from `todos-schema.ts`
+
+An example of a type:
+
+`types/actions-types.ts`
+
+```ts
+export type ActionState<T> = {
+  isSuccess: boolean
+  message: string
+  data?: T
+}
+```
+
+And exporting it:
+
+`types/index.ts`
+
+```ts
+export * from "./actions-types"
+```
+
+### Frontend Rules
+
+Follow these rules when working on the frontend.
+
+It uses Next.js, Tailwind, Shadcn, and Framer Motion.
+
+#### General Rules
+
+- Use `lucide-react` for icons
+
+#### Components
+
+- Use divs instead of other html tags unless otherwise specified
+- Separate the main parts of a component's html with an extra blank line for visual spacing
+- Use actions, not queries, in the app
+- Always tag a component with either `use server` or `use client` at the top, including layouts and pages
+
+##### Organization
+
+- All components be named using kebab case like `example-component.tsx` unless otherwise specified
+- Put components in `/_components` in the route if one-off components
+- Put components in `/components` from the root if shared components
+
+##### Data Fetching
+
+- Fetch data in server components and pass down as props to client components such as `initialTodos`
+- Use server actions from `/actions` to mutate data
+
+##### Server Components
+
+- Use `"use server"` at the top of the file
+- Implement Suspense for asynchronous data fetching
+- Use a separate fetcher component for data loading (see example below)
+
+Example of a server page:
+
+```tsx
+"use server"
+
+import { Suspense } from "react"
+import { SomeAction } from "@/actions/some-actions"
+import SomeComponent from "./_components/some-component"
+import SomeSkeleton from "./_components/some-skeleton"
+
+export default async function ExampleServerPage({
+  params
+}: {
+  params: { id: string }
+}) {
+  return (
+    <Suspense fallback={<SomeSkeleton className="some-class" />}>
+      <SomeComponentFetcher id={params.id} />
+    </Suspense>
+  )
+}
+
+async function SomeComponentFetcher({ id }: { id: string }) {
+  const { data } = await SomeAction(id)
+
+  return (
+    <SomeComponent className="some-class" initialData={data || []} id={id} />
+  )
+}
+```
+
+Example of a server component:
+
+```tsx
+"use server"
+
+interface ExampleServerComponentProps {
+  // Your props here
+}
+
+export async function ExampleServerComponent({
+  props
+}: ExampleServerComponentProps) {
+  // Your code here
+}
+```
+
+##### Client Components
+
+- Use `"use client"` at the top of the file
+
+Example of a client page:
+
+```tsx
+"use client"
+
+export default function ExampleClientPage() {
+  // Your code here
+}
+```
+
+Example of a client component:
+
+```tsx
+"use client"
+
+interface ExampleClientComponentProps {
+  // Your props here
+}
+
+export default function ExampleClientComponent({
+  props
+}: ExampleClientComponentProps) {
+  // Your code here
+}
+```
+
+### Backend Rules
+
+Follow these rules when working on the backend.
+
+It uses Postgres, Supabase, Drizzle ORM, and Server Actions.
+
+#### General Rules
+
+- Never generate migrations. You do not have to do anything in the `db/migrations` folder inluding migrations and metadata. Ignore it.
+
+#### Organization
+
+#### Schemas
+
+- When importing schemas, use `@/db/schema`
+- Name files like `example-schema.ts`
+- All schemas should go in `db/schema`
+- Make sure to export the schema in `db/schema/index.ts`
+- Make sure to add the schema to the `schema` object in `db/db.ts`
+- If using a userId, always use `userId: text("user_id").notNull()`
+- Always include createdAt and updatedAt columns in all tables
+- Make sure to cascade delete when necessary
+- Use enums for columns that have a limited set of possible values such as:
+
+```ts
+import { pgEnum } from "drizzle-orm/pg-core"
+
+export const membershipEnum = pgEnum("membership", ["free", "pro"])
+
+membership: membershipEnum("membership").notNull().default("free")
+```
+
+Example of a schema:
+
+`db/schema/todos-schema.ts`
+
+```ts
+import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
+
+export const todosTable = pgTable("todos", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  content: text("content").notNull(),
+  completed: boolean("completed").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date())
+})
+
+export type InsertTodo = typeof todosTable.$inferInsert
+export type SelectTodo = typeof todosTable.$inferSelect
+```
+
+And exporting it:
+
+`db/schema/index.ts`
+
+```ts
+export * from "./todos-schema"
+```
+
+And adding it to the schema in `db/db.ts`:
+
+`db/db.ts`
+
+```ts
+import { todosTable } from "@/db/schema"
+
+const schema = {
+  todos: todosTable
+}
+```
+
+And a more complex schema:
+
+```ts
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
+
+export const chatsTable = pgTable("chats", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date())
+})
+
+export type InsertChat = typeof chatsTable.$inferInsert
+export type SelectChat = typeof chatsTable.$inferSelect
+```
+
+```ts
+import { pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
+import { chatsTable } from "./chats-schema"
+
+export const roleEnum = pgEnum("role", ["assistant", "user"])
+
+export const messagesTable = pgTable("messages", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  chatId: uuid("chat_id")
+    .references(() => chatsTable.id, { onDelete: "cascade" })
+    .notNull(),
+  content: text("content").notNull(),
+  role: roleEnum("role").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date())
+})
+
+export type InsertMessage = typeof messagesTable.$inferInsert
+export type SelectMessage = typeof messagesTable.$inferSelect
+```
+
+And exporting it:
+
+`db/schema/index.ts`
+
+```ts
+export * from "./chats-schema"
+export * from "./messages-schema"
+```
+
+And adding it to the schema in `db/db.ts`:
+
+`db/db.ts`
+
+```ts
+import { chatsTable, messagesTable } from "@/db/schema"
+
+const schema = {
+  chats: chatsTable,
+  messages: messagesTable
+}
+```
+
+#### Queries
+
+- When importing queries, use `@/db/queries`
+- Name files like `example-queries.ts`
+- All queries should go in `db/queries`
+- Queries have 'use server' at the top
+- Only write the needed queries
+- Do not use explicit returns in queries
+- Sort in CRUD order: Create, Read, Update, Delete
+
+Example of a query:
+
+`db/queries/todos-queries.ts`
+
+```ts
+"use server"
+
+import { db } from "@/db/db"
+import { InsertTodo, todosTable } from "@/db/schema"
+import { eq } from "drizzle-orm"
+
+export const createTodo = async (data: InsertTodo) => {
+  try {
+    const [newTodo] = await db.insert(todosTable).values(data).returning()
+    return newTodo
+  } catch (error) {
+    console.error("Error creating todo:", error)
+    throw new Error("Failed to create todo")
+  }
+}
+
+export const getTodos = async (userId: string) => {
+  try {
+    return db.query.todos.findMany({
+      where: eq(todosTable.userId, userId)
+    })
+  } catch (error) {
+    console.error("Error getting todos:", error)
+    throw new Error("Failed to get todos")
+  }
+}
+```
+
+#### Server Actions
+
+- When importing actions, use `@/actions` or `@/actions/db` if db related
+- DB related actions should go in the `actions/db` folder
+- Other actions should go in the `actions` folder
+- Name files like `example-actions.ts`
+- All actions should go in the `actions` folder
+- Always use `revalidatePath("/")` after a successful action
+- Only write the needed actions
+- Return an ActionState with the needed data type from actions
+- Include Action at the end of function names `Ex: exampleFunction -> exampleFunctionAction`
+- Actions should return a Promise<ActionState<T>>
+- Actions use queries from `db/queries`
+- Sort in CRUD order: Create, Read, Update, Delete
+
+```ts
+export type ActionState<T> = {
+  isSuccess: boolean
+  message: string
+  data?: T
+}
+```
+
+Example of an action:
+
+`actions/db/todos-actions.ts`
+
+```ts
+"use server"
+
+import { createTodo, getTodos } from "@/db/queries/todos-queries"
+import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
+import { ActionState } from "@/types"
+import { revalidatePath } from "next/cache"
+
+export async function createTodoAction(
+  todo: InsertTodo
+): Promise<ActionState<SelectTodo>> {
+  try {
+    const newTodo = await createTodo(todo)
+    revalidatePath("/")
+    return {
+      isSuccess: true,
+      message: "Todo created successfully",
+      data: newTodo
+    }
+  } catch (error) {
+    console.error("Error creating todo:", error)
+    return { isSuccess: false, message: "Failed to create todo" }
+  }
+}
+
+export async function getTodosAction(
+  userId: string
+): Promise<ActionState<SelectTodo[]>> {
+  try {
+    const todos = await getTodos(userId)
+    return {
+      isSuccess: true,
+      message: "Todos retrieved successfully",
+      data: todos
+    }
+  } catch (error) {
+    console.error("Error getting todos:", error)
+    return { isSuccess: false, message: "Failed to get todos" }
+  }
+}
+```
+
+### Auth Rules
+
+Follow these rules when working on auth.
+
+It uses Clerk for authentication.
+
+#### General Rules
+
+- Import the auth helper with `import { auth } from "@clerk/nextjs/server"` in server components
+
+### Payments Rules
+
+Follow these rules when working on payments.
+
+It uses Stripe for payments.
