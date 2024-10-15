@@ -1,5 +1,6 @@
 "use server"
 
+import { FeaturesSection } from "@/components/landing/features"
 import { HeroSection } from "@/components/landing/hero"
 
 export default async function HomePage() {
@@ -7,7 +8,7 @@ export default async function HomePage() {
     <div className="pb-20">
       <HeroSection />
       {/* social proof */}
-      {/* features bento */}
+      <FeaturesSection />
       {/* pricing */}
       {/* faq */}
       {/* blog */}
