@@ -1,16 +1,16 @@
-"use server";
+"use server"
 
-import Header from "@/components/header";
+import Header from "@/components/header"
 
 export default async function MarketingLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <>
       <Header />
       {children}
     </>
-  );
+  )
 }

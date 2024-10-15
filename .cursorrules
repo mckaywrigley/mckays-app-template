@@ -1,6 +1,6 @@
 # Project Instructions
 
-Use the project specification and guidelines as you build the todo app.
+Use the project specification and guidelines as you build the app.
 
 Write the complete code for every step. Do not get lazy.
 
@@ -8,7 +8,7 @@ Your goal is to completely finish whatever the user asks for.
 
 ## Overview
 
-Todo app is a web app that allows you to manage your todos.
+This is a web app template.
 
 ## Tech Stack
 
@@ -127,6 +127,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - Use `"use server"` at the top of the file
 - Implement Suspense for asynchronous data fetching
 - Use a separate fetcher component for data loading (see example below)
+- Make sure to use `async` for all pages and components if they are server components
 
 Example of a server page:
 
