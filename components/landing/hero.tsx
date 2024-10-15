@@ -36,7 +36,7 @@ export const HeroSection = () => {
           project.
         </div>
 
-        <Link href="/pricing">
+        <Link href="https://github.com/mckaywrigley/mckays-app-template">
           <Button className="bg-blue-500 text-lg hover:bg-blue-600">
             <Rocket className="mr-2 size-5" />
             Get Started &rarr;

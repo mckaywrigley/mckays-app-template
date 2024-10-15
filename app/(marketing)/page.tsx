@@ -4,7 +4,7 @@ import { HeroSection } from "@/components/landing/hero"
 
 export default async function HomePage() {
   return (
-    <main>
+    <div className="pb-20">
       <HeroSection />
       {/* social proof */}
       {/* features bento */}
@@ -12,6 +12,6 @@ export default async function HomePage() {
       {/* faq */}
       {/* blog */}
       {/* footer */}
-    </main>
+    </div>
   )
 }
