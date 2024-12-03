@@ -24,7 +24,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { userId } = auth()
+  const { userId } = await auth()
 
   if (userId) {
     const profile = await getProfileByUserId(userId)

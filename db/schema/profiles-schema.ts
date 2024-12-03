@@ -1,6 +1,6 @@
-import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
-export const membershipEnum = pgEnum("membership", ["free", "pro"]);
+export const membershipEnum = pgEnum("membership", ["free", "pro"])
 
 export const profilesTable = pgTable("profiles", {
   userId: text("user_id").primaryKey().notNull(),
@@ -12,7 +12,7 @@ export const profilesTable = pgTable("profiles", {
     .defaultNow()
     .notNull()
     .$onUpdate(() => new Date())
-});
+})
 
-export type InsertProfile = typeof profilesTable.$inferInsert;
-export type SelectProfile = typeof profilesTable.$inferSelect;
+export type InsertProfile = typeof profilesTable.$inferInsert
+export type SelectProfile = typeof profilesTable.$inferSelect
