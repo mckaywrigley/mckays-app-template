@@ -4,7 +4,7 @@ import { db } from "@/db/db"
 import { InsertTodo, SelectTodo, todosTable } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export const createTodo = async (data: InsertTodo) => {
+export const createTodoQuery = async (data: InsertTodo) => {
   try {
     const [newTodo] = await db.insert(todosTable).values(data).returning()
     return newTodo
@@ -14,7 +14,7 @@ export const createTodo = async (data: InsertTodo) => {
   }
 }
 
-export const getTodos = async (userId: string): Promise<SelectTodo[]> => {
+export const getTodosQuery = async (userId: string): Promise<SelectTodo[]> => {
   try {
     return db.query.todos.findMany({
       where: eq(todosTable.userId, userId)
@@ -25,7 +25,7 @@ export const getTodos = async (userId: string): Promise<SelectTodo[]> => {
   }
 }
 
-export const getTodo = async (id: string) => {
+export const getTodoQuery = async (id: string) => {
   try {
     const todo = await db.query.todos.findFirst({
       where: eq(todosTable.id, id)
@@ -40,7 +40,10 @@ export const getTodo = async (id: string) => {
   }
 }
 
-export const updateTodo = async (id: string, data: Partial<InsertTodo>) => {
+export const updateTodoQuery = async (
+  id: string,
+  data: Partial<InsertTodo>
+) => {
   try {
     const [updatedTodo] = await db
       .update(todosTable)
@@ -54,7 +57,7 @@ export const updateTodo = async (id: string, data: Partial<InsertTodo>) => {
   }
 }
 
-export const deleteTodo = async (id: string) => {
+export const deleteTodoQuery = async (id: string) => {
   try {
     await db.delete(todosTable).where(eq(todosTable.id, id))
   } catch (error) {

@@ -79,7 +79,7 @@ An example of a type:
 `types/actions-types.ts`
 
 ```ts
-export type ActionState<T> = 
+export type ActionState<T> =
   | { isSuccess: true; message: string; data: T }
   | { isSuccess: false; message: string; data?: never }
 ```
@@ -352,6 +352,7 @@ const schema = {
 - All queries should go in `db/queries`
 - Queries have 'use server' at the top
 - Only write the needed queries
+- Include Query at the end of function names `Ex: exampleFunction -> exampleFunctionQuery`
 - Do not use explicit returns in queries
 - Sort in CRUD order: Create, Read, Update, Delete
 
@@ -366,7 +367,7 @@ import { db } from "@/db/db"
 import { InsertTodo, todosTable } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export const createTodo = async (data: InsertTodo) => {
+export const createTodoQuery = async (data: InsertTodo) => {
   try {
     const [newTodo] = await db.insert(todosTable).values(data).returning()
     return newTodo
@@ -376,7 +377,7 @@ export const createTodo = async (data: InsertTodo) => {
   }
 }
 
-export const getTodos = async (userId: string) => {
+export const getTodosQuery = async (userId: string) => {
   try {
     return db.query.todos.findMany({
       where: eq(todosTable.userId, userId)
@@ -384,6 +385,31 @@ export const getTodos = async (userId: string) => {
   } catch (error) {
     console.error("Error getting todos:", error)
     throw new Error("Failed to get todos")
+  }
+}
+
+export const updateTodoQuery = async (
+  id: string,
+  data: Partial<InsertTodo>
+) => {
+  try {
+    return db
+      .update(todosTable)
+      .set(data)
+      .where(eq(todosTable.id, id))
+      .returning()
+  } catch (error) {
+    console.error("Error updating todo:", error)
+    throw new Error("Failed to update todo")
+  }
+}
+
+export const deleteTodoQuery = async (id: string) => {
+  try {
+    return db.delete(todosTable).where(eq(todosTable.id, id))
+  } catch (error) {
+    console.error("Error deleting todo:", error)
+    throw new Error("Failed to delete todo")
   }
 }
 ```
@@ -403,7 +429,7 @@ export const getTodos = async (userId: string) => {
 - Sort in CRUD order: Create, Read, Update, Delete
 
 ```ts
-export type ActionState<T> = 
+export type ActionState<T> =
   | { isSuccess: true; message: string; data: T }
   | { isSuccess: false; message: string; data?: never }
 ```
@@ -415,7 +441,12 @@ Example of an action:
 ```ts
 "use server"
 
-import { createTodo, getTodos, updateTodo, deleteTodo } from "@/db/queries/todos-queries"
+import {
+  createTodoQuery,
+  getTodosQuery,
+  updateTodoQuery,
+  deleteTodoQuery
+} from "@/db/queries/todos-queries"
 import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
 
@@ -423,7 +454,7 @@ export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const newTodo = await createTodo(todo)
+    const newTodo = await createTodoQuery(todo)
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -439,7 +470,7 @@ export async function getTodosAction(
   userId: string
 ): Promise<ActionState<SelectTodo[]>> {
   try {
-    const todos = await getTodos(userId)
+    const todos = await getTodosQuery(userId)
     return {
       isSuccess: true,
       message: "Todos retrieved successfully",
@@ -456,7 +487,7 @@ export async function updateTodoAction(
   data: Partial<InsertTodo>
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const updatedTodo = await updateTodo(id, data)
+    const updatedTodo = await updateTodoQuery(id, data)
     return {
       isSuccess: true,
       message: "Todo updated successfully",
@@ -468,12 +499,14 @@ export async function updateTodoAction(
   }
 }
 
-export async function deleteTodoAction(
-  id: string
-): Promise<ActionState<void>> {
+export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
   try {
-    await deleteTodo(id)
-    return { isSuccess: true, message: "Todo deleted successfully", data: undefined }
+    await deleteTodoQuery(id)
+    return {
+      isSuccess: true,
+      message: "Todo deleted successfully",
+      data: undefined
+    }
   } catch (error) {
     console.error("Error deleting todo:", error)
     return { isSuccess: false, message: "Failed to delete todo" }
