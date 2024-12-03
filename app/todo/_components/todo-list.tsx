@@ -1,87 +1,110 @@
-"use client";
+"use client"
 
-import { createTodoAction, deleteTodoAction, updateTodoAction } from "@/actions/db/todos-actions";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { SelectTodo } from "@/db/schema";
-import { Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {
+  createTodoAction,
+  deleteTodoAction,
+  updateTodoAction
+} from "@/actions/db/todos-actions"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { SelectTodo } from "@/db/schema"
+import { Trash2 } from "lucide-react"
+import { useState } from "react"
 
 interface TodoListProps {
-  userId: string;
-  initialTodos: SelectTodo[];
+  userId: string
+  initialTodos: SelectTodo[]
 }
 
 export function TodoList({ userId, initialTodos }: TodoListProps) {
-  const router = useRouter();
-
-  const [newTodo, setNewTodo] = useState("");
-  const [todos, setTodos] = useState(initialTodos);
+  const [newTodo, setNewTodo] = useState("")
+  const [todos, setTodos] = useState(initialTodos)
 
   const handleAddTodo = async () => {
     if (newTodo.trim() !== "") {
-      const optimisticTodo = {
+      const newTodoData = {
         id: Date.now().toString(),
         userId,
         content: newTodo,
         completed: false,
         createdAt: new Date(),
         updatedAt: new Date()
-      };
-      setTodos((prevTodos) => [...prevTodos, optimisticTodo]);
-      setNewTodo("");
+      }
+      setTodos(prevTodos => [...prevTodos, newTodoData])
+      setNewTodo("")
 
-      await createTodoAction({ userId: userId, content: newTodo, completed: false });
-      router.refresh();
+      const result = await createTodoAction({
+        userId: userId,
+        content: newTodo,
+        completed: false
+      })
+      if (result.isSuccess) {
+        setTodos(prevTodos =>
+          prevTodos.map(todo =>
+            todo.id === newTodoData.id ? result.data : todo
+          )
+        )
+      } else {
+        console.error("Error creating todo:", result.message)
+        setTodos(prevTodos =>
+          prevTodos.filter(todo => todo.id !== newTodoData.id)
+        )
+      }
     }
-  };
+  }
 
   const handleToggleTodo = async (id: string, completed: boolean) => {
-    setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === id ? { ...todo, completed: !completed } : todo)));
+    console.log("handleToggleTodo", id, completed)
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        todo.id === id ? { ...todo, completed: !completed } : todo
+      )
+    )
 
-    await updateTodoAction(id, { completed: !completed });
-    router.refresh();
-  };
+    await updateTodoAction(id, { completed: !completed })
+  }
 
   const handleRemoveTodo = async (id: string) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    console.log("handleRemoveTodo", id)
+    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
 
-    await deleteTodoAction(id);
-    router.refresh();
-  };
+    await deleteTodoAction(id)
+  }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-card rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-4 text-center">Todo App</h1>
-      <div className="flex mb-4">
+    <div className="bg-card mx-auto mt-8 max-w-md rounded-lg p-6 shadow">
+      <h1 className="mb-4 text-center text-2xl font-bold">Todo App</h1>
+
+      <div className="mb-4 flex">
         <Input
           type="text"
           value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
+          onChange={e => setNewTodo(e.target.value)}
           placeholder="Add a new todo"
           className="mr-2"
-          onKeyPress={(e) => e.key === "Enter" && handleAddTodo()}
+          onKeyPress={e => e.key === "Enter" && handleAddTodo()}
         />
         <Button onClick={handleAddTodo}>Add</Button>
       </div>
       <ul className="space-y-2">
-        {todos.map((todo) => (
+        {todos.map(todo => (
           <li
             key={todo.id}
-            className="flex items-center justify-between bg-muted p-2 rounded"
+            className="bg-muted flex items-center justify-between rounded p-2"
           >
             <div className="flex items-center">
               <Checkbox
                 id={`todo-${todo.id}`}
                 checked={todo.completed}
-                onCheckedChange={() => handleToggleTodo(todo.id, todo.completed)}
+                onCheckedChange={() =>
+                  handleToggleTodo(todo.id, todo.completed)
+                }
                 className="mr-2"
               />
               <label
                 htmlFor={`todo-${todo.id}`}
-                className={`${todo.completed ? "line-through text-muted-foreground" : ""}`}
+                className={`${todo.completed ? "text-muted-foreground line-through" : ""}`}
               >
                 {todo.content}
               </label>
@@ -91,12 +114,12 @@ export function TodoList({ userId, initialTodos }: TodoListProps) {
               size="icon"
               onClick={() => handleRemoveTodo(todo.id)}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="size-4" />
               <span className="sr-only">Delete todo</span>
             </Button>
           </li>
         ))}
       </ul>
     </div>
-  );
+  )
 }

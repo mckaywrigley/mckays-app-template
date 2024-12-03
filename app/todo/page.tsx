@@ -1,34 +1,29 @@
-"use server";
+"use server"
 
-import { TodoList } from "@/app/todo/_components/todo-list";
-import { getProfileByUserId } from "@/db/queries/profiles-queries";
-import { getTodos } from "@/db/queries/todos-queries";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { getTodosAction } from "@/actions/db/todos-actions"
+import { TodoList } from "@/app/todo/_components/todo-list"
+import { getProfileByUserId } from "@/db/queries/profiles-queries"
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
 
 export default async function TodoPage() {
-  const { userId } = auth();
+  const { userId } = await auth()
 
   if (!userId) {
-    return redirect("/login");
+    return redirect("/login")
   }
 
-  const profile = await getProfileByUserId(userId);
+  const profile = await getProfileByUserId(userId)
 
   if (!profile) {
-    return redirect("/signup");
+    return redirect("/signup")
   }
 
   if (profile.membership === "free") {
-    return redirect("/pricing");
+    return redirect("/pricing")
   }
 
-  const todos = await getTodos(userId);
+  const todos = await getTodosAction(userId)
 
-  return (
-    <TodoList
-      userId={userId}
-      initialTodos={todos}
-    />
-  );
+  return <TodoList userId={userId} initialTodos={todos.data ?? []} />
 }

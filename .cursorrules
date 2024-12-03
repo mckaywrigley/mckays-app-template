@@ -1,6 +1,6 @@
 # Project Instructions
 
-Use the project specification and guidelines as you build the todo app.
+Use the project specification and guidelines as you build the app.
 
 Write the complete code for every step. Do not get lazy.
 
@@ -8,7 +8,7 @@ Your goal is to completely finish whatever the user asks for.
 
 ## Overview
 
-Todo app is a web app that allows you to manage your todos.
+This is a web app template.
 
 ## Tech Stack
 
@@ -79,11 +79,9 @@ An example of a type:
 `types/actions-types.ts`
 
 ```ts
-export type ActionState<T> = {
-  isSuccess: boolean
-  message: string
-  data?: T
-}
+export type ActionState<T> = 
+  | { isSuccess: true; message: string; data: T }
+  | { isSuccess: false; message: string; data?: never }
 ```
 
 And exporting it:
@@ -127,6 +125,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - Use `"use server"` at the top of the file
 - Implement Suspense for asynchronous data fetching
 - Use a separate fetcher component for data loading (see example below)
+- Make sure to use `async` for all pages and components if they are server components
 
 Example of a server page:
 
@@ -396,7 +395,6 @@ export const getTodos = async (userId: string) => {
 - Other actions should go in the `actions` folder
 - Name files like `example-actions.ts`
 - All actions should go in the `actions` folder
-- Always use `revalidatePath("/")` after a successful action
 - Only write the needed actions
 - Return an ActionState with the needed data type from actions
 - Include Action at the end of function names `Ex: exampleFunction -> exampleFunctionAction`
@@ -405,11 +403,9 @@ export const getTodos = async (userId: string) => {
 - Sort in CRUD order: Create, Read, Update, Delete
 
 ```ts
-export type ActionState<T> = {
-  isSuccess: boolean
-  message: string
-  data?: T
-}
+export type ActionState<T> = 
+  | { isSuccess: true; message: string; data: T }
+  | { isSuccess: false; message: string; data?: never }
 ```
 
 Example of an action:
@@ -419,17 +415,15 @@ Example of an action:
 ```ts
 "use server"
 
-import { createTodo, getTodos } from "@/db/queries/todos-queries"
+import { createTodo, getTodos, updateTodo, deleteTodo } from "@/db/queries/todos-queries"
 import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
-import { revalidatePath } from "next/cache"
 
 export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
     const newTodo = await createTodo(todo)
-    revalidatePath("/")
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -456,6 +450,35 @@ export async function getTodosAction(
     return { isSuccess: false, message: "Failed to get todos" }
   }
 }
+
+export async function updateTodoAction(
+  id: string,
+  data: Partial<InsertTodo>
+): Promise<ActionState<SelectTodo>> {
+  try {
+    const updatedTodo = await updateTodo(id, data)
+    return {
+      isSuccess: true,
+      message: "Todo updated successfully",
+      data: updatedTodo
+    }
+  } catch (error) {
+    console.error("Error updating todo:", error)
+    return { isSuccess: false, message: "Failed to update todo" }
+  }
+}
+
+export async function deleteTodoAction(
+  id: string
+): Promise<ActionState<void>> {
+  try {
+    await deleteTodo(id)
+    return { isSuccess: true, message: "Todo deleted successfully", data: undefined }
+  } catch (error) {
+    console.error("Error deleting todo:", error)
+    return { isSuccess: false, message: "Failed to delete todo" }
+  }
+}
 ```
 
 ### Auth Rules
@@ -467,6 +490,7 @@ It uses Clerk for authentication.
 #### General Rules
 
 - Import the auth helper with `import { auth } from "@clerk/nextjs/server"` in server components
+- await the auth helper in server actions
 
 ### Payments Rules
 

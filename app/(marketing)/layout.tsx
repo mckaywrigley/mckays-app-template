@@ -1,16 +1,17 @@
-"use server";
+"use server"
 
-import Header from "@/components/header";
+import Header from "@/components/header"
 
 export default async function MarketingLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Header />
-      {children}
-    </>
-  );
+
+      <div className="flex-1">{children}</div>
+    </div>
+  )
 }
