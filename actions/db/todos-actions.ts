@@ -8,14 +8,12 @@ import {
 } from "@/db/queries/todos-queries"
 import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
-import { revalidatePath } from "next/cache"
 
 export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
     const newTodo = await createTodo(todo)
-    revalidatePath("/")
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -49,7 +47,6 @@ export async function updateTodoAction(
 ): Promise<ActionState<SelectTodo>> {
   try {
     const updatedTodo = await updateTodo(id, data)
-    revalidatePath("/")
     return {
       isSuccess: true,
       message: "Todo updated successfully",
@@ -63,11 +60,10 @@ export async function updateTodoAction(
 
 export async function deleteTodoAction(
   id: string
-): Promise<ActionState<SelectTodo>> {
+): Promise<ActionState<void>> {
   try {
     await deleteTodo(id)
-    revalidatePath("/")
-    return { isSuccess: true, message: "Todo deleted successfully" }
+    return { isSuccess: true, message: "Todo deleted successfully", data: undefined }
   } catch (error) {
     console.error("Error deleting todo:", error)
     return { isSuccess: false, message: "Failed to delete todo" }

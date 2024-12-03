@@ -1,8 +1,8 @@
 "use server"
 
+import { getTodosAction } from "@/actions/db/todos-actions"
 import { TodoList } from "@/app/todo/_components/todo-list"
 import { getProfileByUserId } from "@/db/queries/profiles-queries"
-import { getTodos } from "@/db/queries/todos-queries"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 
@@ -23,7 +23,7 @@ export default async function TodoPage() {
     return redirect("/pricing")
   }
 
-  const todos = await getTodos(userId)
+  const todos = await getTodosAction(userId)
 
-  return <TodoList userId={userId} initialTodos={todos} />
+  return <TodoList userId={userId} initialTodos={todos.data ?? []} />
 }

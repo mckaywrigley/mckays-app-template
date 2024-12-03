@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { SelectTodo } from "@/db/schema"
 import { Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface TodoListProps {
@@ -19,14 +18,12 @@ interface TodoListProps {
 }
 
 export function TodoList({ userId, initialTodos }: TodoListProps) {
-  const router = useRouter()
-
   const [newTodo, setNewTodo] = useState("")
   const [todos, setTodos] = useState(initialTodos)
 
   const handleAddTodo = async () => {
     if (newTodo.trim() !== "") {
-      const optimisticTodo = {
+      const newTodoData = {
         id: Date.now().toString(),
         userId,
         content: newTodo,
@@ -34,19 +31,31 @@ export function TodoList({ userId, initialTodos }: TodoListProps) {
         createdAt: new Date(),
         updatedAt: new Date()
       }
-      setTodos(prevTodos => [...prevTodos, optimisticTodo])
+      setTodos(prevTodos => [...prevTodos, newTodoData])
       setNewTodo("")
 
-      await createTodoAction({
+      const result = await createTodoAction({
         userId: userId,
         content: newTodo,
         completed: false
       })
-      router.refresh()
+      if (result.isSuccess) {
+        setTodos(prevTodos =>
+          prevTodos.map(todo =>
+            todo.id === newTodoData.id ? result.data : todo
+          )
+        )
+      } else {
+        console.error("Error creating todo:", result.message)
+        setTodos(prevTodos =>
+          prevTodos.filter(todo => todo.id !== newTodoData.id)
+        )
+      }
     }
   }
 
   const handleToggleTodo = async (id: string, completed: boolean) => {
+    console.log("handleToggleTodo", id, completed)
     setTodos(prevTodos =>
       prevTodos.map(todo =>
         todo.id === id ? { ...todo, completed: !completed } : todo
@@ -54,14 +63,13 @@ export function TodoList({ userId, initialTodos }: TodoListProps) {
     )
 
     await updateTodoAction(id, { completed: !completed })
-    router.refresh()
   }
 
   const handleRemoveTodo = async (id: string) => {
+    console.log("handleRemoveTodo", id)
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id))
 
     await deleteTodoAction(id)
-    router.refresh()
   }
 
   return (
