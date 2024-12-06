@@ -1,10 +1,10 @@
 "use server"
 
 import {
-  createTodo,
-  deleteTodo,
-  getTodos,
-  updateTodo
+  createTodoQuery,
+  deleteTodoQuery,
+  getTodosQuery,
+  updateTodoQuery
 } from "@/db/queries/todos-queries"
 import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
@@ -13,7 +13,7 @@ export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const newTodo = await createTodo(todo)
+    const newTodo = await createTodoQuery(todo)
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -29,7 +29,7 @@ export async function getTodosAction(
   userId: string
 ): Promise<ActionState<SelectTodo[]>> {
   try {
-    const todos = await getTodos(userId)
+    const todos = await getTodosQuery(userId)
     return {
       isSuccess: true,
       message: "Todos retrieved successfully",
@@ -46,7 +46,7 @@ export async function updateTodoAction(
   data: Partial<InsertTodo>
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const updatedTodo = await updateTodo(id, data)
+    const updatedTodo = await updateTodoQuery(id, data)
     return {
       isSuccess: true,
       message: "Todo updated successfully",
@@ -58,12 +58,14 @@ export async function updateTodoAction(
   }
 }
 
-export async function deleteTodoAction(
-  id: string
-): Promise<ActionState<void>> {
+export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
   try {
-    await deleteTodo(id)
-    return { isSuccess: true, message: "Todo deleted successfully", data: undefined }
+    await deleteTodoQuery(id)
+    return {
+      isSuccess: true,
+      message: "Todo deleted successfully",
+      data: undefined
+    }
   } catch (error) {
     console.error("Error deleting todo:", error)
     return { isSuccess: false, message: "Failed to delete todo" }

@@ -8,7 +8,7 @@ import {
   SelectProfile
 } from "../schema/profiles-schema"
 
-export const createProfile = async (data: InsertProfile) => {
+export const createProfileQuery = async (data: InsertProfile) => {
   try {
     const [newProfile] = await db.insert(profilesTable).values(data).returning()
     return newProfile
@@ -18,7 +18,7 @@ export const createProfile = async (data: InsertProfile) => {
   }
 }
 
-export const getProfileByUserId = async (userId: string) => {
+export const getProfileByUserIdQuery = async (userId: string) => {
   try {
     const profile = await db.query.profiles.findFirst({
       where: eq(profilesTable.userId, userId)
@@ -31,11 +31,11 @@ export const getProfileByUserId = async (userId: string) => {
   }
 }
 
-export const getAllProfiles = async (): Promise<SelectProfile[]> => {
+export const getAllProfilesQuery = async (): Promise<SelectProfile[]> => {
   return db.query.profiles.findMany()
 }
 
-export const updateProfile = async (
+export const updateProfileQuery = async (
   userId: string,
   data: Partial<InsertProfile>
 ) => {
@@ -52,7 +52,7 @@ export const updateProfile = async (
   }
 }
 
-export const updateProfileByStripeCustomerId = async (
+export const updateProfileByStripeCustomerIdQuery = async (
   stripeCustomerId: string,
   data: Partial<InsertProfile>
 ) => {
@@ -69,7 +69,7 @@ export const updateProfileByStripeCustomerId = async (
   }
 }
 
-export const deleteProfile = async (userId: string) => {
+export const deleteProfileQuery = async (userId: string) => {
   try {
     await db.delete(profilesTable).where(eq(profilesTable.userId, userId))
   } catch (error) {

@@ -1,8 +1,8 @@
 "use server"
 
 import {
-  createProfile,
-  getProfileByUserId
+  createProfileQuery,
+  getProfileByUserIdQuery
 } from "@/db/queries/profiles-queries"
 import { InsertProfile, SelectProfile } from "@/db/schema/profiles-schema"
 import { ActionState } from "@/types"
@@ -11,7 +11,7 @@ export async function createProfileAction(
   data: InsertProfile
 ): Promise<ActionState<SelectProfile>> {
   try {
-    const newProfile = await createProfile(data)
+    const newProfile = await createProfileQuery(data)
     return {
       isSuccess: true,
       message: "Profile created successfully",
@@ -27,11 +27,11 @@ export async function getProfileByUserIdAction(
   userId: string
 ): Promise<ActionState<SelectProfile>> {
   try {
-    const profile = await getProfileByUserId(userId)
+    const profile = await getProfileByUserIdQuery(userId)
     if (!profile) {
       return { isSuccess: false, message: "Profile not found" }
     }
-    
+
     return {
       isSuccess: true,
       message: "Profile retrieved successfully",
