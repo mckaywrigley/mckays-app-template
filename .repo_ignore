@@ -35,3 +35,4 @@
 **/.husky
 **/prompts
 **/migrations
+**/public
