@@ -26,10 +26,11 @@
 **/*.meta
 **/package-lock.json
 
+# AI Specific
 .repo_ignore
 .cursorrules
 
-# Mckay
+# Project Specific
 **/.github
 **/.husky
 **/prompts
