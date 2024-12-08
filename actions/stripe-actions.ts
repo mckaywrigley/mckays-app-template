@@ -1,10 +1,7 @@
-import {
-  updateProfileByStripeCustomerIdQuery,
-  updateProfileQuery
-} from "@/db/queries/profiles-queries"
-import { SelectProfile } from "@/db/schema"
 import { stripe } from "@/lib/stripe"
 import Stripe from "stripe"
+import { SelectProfile } from "@/db/schema"
+import { updateProfileAction, updateProfileByStripeCustomerIdAction } from "@/actions/db/profiles-actions"
 
 type MembershipStatus = SelectProfile["membership"]
 
@@ -46,16 +43,16 @@ export const updateStripeCustomer = async (
 
     const subscription = await getSubscription(subscriptionId)
 
-    const updatedProfile = await updateProfileQuery(userId, {
+    const result = await updateProfileAction(userId, {
       stripeCustomerId: customerId,
       stripeSubscriptionId: subscription.id
     })
 
-    if (!updatedProfile) {
+    if (!result.isSuccess) {
       throw new Error("Failed to update customer profile")
     }
 
-    return updatedProfile
+    return result.data
   } catch (error) {
     console.error("Error in updateStripeCustomer:", error)
     throw error instanceof Error
@@ -77,9 +74,9 @@ export const manageSubscriptionStatusChange = async (
     }
 
     const subscription = await getSubscription(subscriptionId)
-
     const product = await stripe.products.retrieve(productId)
     const membership = product.metadata.membership as MembershipStatus
+
     if (!["free", "pro"].includes(membership)) {
       throw new Error(
         `Invalid membership type in product metadata: ${membership}`
@@ -91,10 +88,14 @@ export const manageSubscriptionStatusChange = async (
       membership
     )
 
-    await updateProfileByStripeCustomerIdQuery(customerId, {
+    const updateResult = await updateProfileByStripeCustomerIdAction(customerId, {
       stripeSubscriptionId: subscription.id,
       membership: membershipStatus
     })
+
+    if (!updateResult.isSuccess) {
+      throw new Error("Failed to update subscription status")
+    }
 
     return membershipStatus
   } catch (error) {

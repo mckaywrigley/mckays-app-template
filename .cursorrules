@@ -4,7 +4,7 @@ Use the project specification and guidelines as you build the app.
 
 Write the complete code for every step. Do not get lazy.
 
-Your goal is to completely finish whatever the user asks for.
+Your goal is to completely finish whatever I ask for.
 
 ## Overview
 
@@ -20,14 +20,12 @@ This is a web app template.
 
 ## Project Structure
 
-### General Structure
-
 - `actions` - Server actions
   - `db` - Database related actions
   - Other actions
 - `app` - Next.js app router
   - `api` - API routes
-  - `route` - An example route (each of these are only if needed)
+  - `route` - An example route
     - `_components` - One-off components for the route
     - `layout.tsx` - Layout for the route
     - `page.tsx` - Page for the route
@@ -35,16 +33,12 @@ This is a web app template.
   - `ui` - UI components
   - `utilities` - Utility components
 - `db` - Database
-  - `migrations` - Database migrations (you never have to do anything in here)
-  - `queries` - Database queries
   - `schema` - Database schemas
 - `lib` - Library code
   - `hooks` - Custom hooks
 - `prompts` - Prompt files
 - `public` - Static assets
 - `types` - Type definitions
-
-### Project Specific Structure
 
 ## Rules
 
@@ -106,7 +100,6 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 
 - Use divs instead of other html tags unless otherwise specified
 - Separate the main parts of a component's html with an extra blank line for visual spacing
-- Use actions, not queries, in the app
 - Always tag a component with either `use server` or `use client` at the top, including layouts and pages
 
 ##### Organization
@@ -117,15 +110,15 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 
 ##### Data Fetching
 
-- Fetch data in server components and pass down as props to client components such as `initialTodos`
-- Use server actions from `/actions` to mutate data
+- Fetch data in server components and pass the data down as props to client components.
+- Use server actions from `/actions` to mutate data.
 
 ##### Server Components
 
-- Use `"use server"` at the top of the file
-- Implement Suspense for asynchronous data fetching
-- Use a separate fetcher component for data loading (see example below)
-- Make sure to use `async` for all layouts, pages, and components if they are server components
+- Use `"use server"` at the top of the file.
+- Implement Suspense for asynchronous data fetching to show loading states while data is being fetched.
+- If no asynchronous logic is required for a given server component, you do not need to wrap the component in `<Suspense>`. You can simply return the final UI directly since there is no async boundary needed.
+- If asynchronous fetching is required, you can use a `<Suspense>` boundary and a fallback to indicate a loading state while data is loading.
 
 Example of a server layout:
 
@@ -141,7 +134,7 @@ export default async function ExampleServerLayout({
 }
 ```
 
-Example of a server page:
+Example of a server page (with async logic):
 
 ```tsx
 "use server"
@@ -151,24 +144,30 @@ import { SomeAction } from "@/actions/some-actions"
 import SomeComponent from "./_components/some-component"
 import SomeSkeleton from "./_components/some-skeleton"
 
-export default async function ExampleServerPage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function ExampleServerPage() {
   return (
     <Suspense fallback={<SomeSkeleton className="some-class" />}>
-      <SomeComponentFetcher id={params.id} />
+      <SomeComponentFetcher />
     </Suspense>
   )
 }
 
-async function SomeComponentFetcher({ id }: { id: string }) {
-  const { data } = await SomeAction(id)
+async function SomeComponentFetcher() {
+  const { data } = await SomeAction()
+  return <SomeComponent className="some-class" initialData={data || []} />
+}
+```
 
-  return (
-    <SomeComponent className="some-class" initialData={data || []} id={id} />
-  )
+Example of a server page (no async logic required):
+
+```tsx
+"use server"
+
+import SomeClientComponent from "./_components/some-client-component"
+
+// In this case, no asynchronous work is being done, so no Suspense or fallback is required.
+export default async function ExampleServerPage() {
+  return <SomeClientComponent initialData={[]} />
 }
 ```
 
@@ -191,6 +190,7 @@ export async function ExampleServerComponent({
 ##### Client Components
 
 - Use `"use client"` at the top of the file
+- Client components can safely rely on props passed down from server components, or handle UI interactions without needing <Suspense> if there’s no async logic.
 
 Example of a client page:
 
@@ -208,13 +208,14 @@ Example of a client component:
 "use client"
 
 interface ExampleClientComponentProps {
-  // Your props here
+  initialData: any[]
 }
 
 export default function ExampleClientComponent({
-  props
+  initialData
 }: ExampleClientComponentProps) {
-  // Your code here
+  // Client-side logic here
+  return <div>{initialData.length} items</div>
 }
 ```
 
@@ -359,75 +360,6 @@ const schema = {
 }
 ```
 
-#### Queries
-
-- When importing queries, use `@/db/queries`
-- Name files like `example-queries.ts`
-- All queries should go in `db/queries`
-- Queries have 'use server' at the top
-- Only write the needed queries
-- Include Query at the end of function names `Ex: exampleFunction -> exampleFunctionQuery`
-- Do not use explicit returns in queries
-- Sort in CRUD order: Create, Read, Update, Delete
-
-Example of a query:
-
-`db/queries/todos-queries.ts`
-
-```ts
-"use server"
-
-import { db } from "@/db/db"
-import { InsertTodo, todosTable } from "@/db/schema"
-import { eq } from "drizzle-orm"
-
-export const createTodoQuery = async (data: InsertTodo) => {
-  try {
-    const [newTodo] = await db.insert(todosTable).values(data).returning()
-    return newTodo
-  } catch (error) {
-    console.error("Error creating todo:", error)
-    throw new Error("Failed to create todo")
-  }
-}
-
-export const getTodosQuery = async (userId: string) => {
-  try {
-    return db.query.todos.findMany({
-      where: eq(todosTable.userId, userId)
-    })
-  } catch (error) {
-    console.error("Error getting todos:", error)
-    throw new Error("Failed to get todos")
-  }
-}
-
-export const updateTodoQuery = async (
-  id: string,
-  data: Partial<InsertTodo>
-) => {
-  try {
-    return db
-      .update(todosTable)
-      .set(data)
-      .where(eq(todosTable.id, id))
-      .returning()
-  } catch (error) {
-    console.error("Error updating todo:", error)
-    throw new Error("Failed to update todo")
-  }
-}
-
-export const deleteTodoQuery = async (id: string) => {
-  try {
-    return db.delete(todosTable).where(eq(todosTable.id, id))
-  } catch (error) {
-    console.error("Error deleting todo:", error)
-    throw new Error("Failed to delete todo")
-  }
-}
-```
-
 #### Server Actions
 
 - When importing actions, use `@/actions` or `@/actions/db` if db related
@@ -439,8 +371,8 @@ export const deleteTodoQuery = async (id: string) => {
 - Return an ActionState with the needed data type from actions
 - Include Action at the end of function names `Ex: exampleFunction -> exampleFunctionAction`
 - Actions should return a Promise<ActionState<T>>
-- Actions use queries from `db/queries`
 - Sort in CRUD order: Create, Read, Update, Delete
+- Make sure to return undefined as the data type if the action is not supposed to return any data
 
 ```ts
 export type ActionState<T> =
@@ -455,20 +387,16 @@ Example of an action:
 ```ts
 "use server"
 
-import {
-  createTodoQuery,
-  getTodosQuery,
-  updateTodoQuery,
-  deleteTodoQuery
-} from "@/db/queries/todos-queries"
-import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
+import { db } from "@/db/db"
+import { InsertTodo, SelectTodo, todosTable } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
+import { eq } from "drizzle-orm"
 
 export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const newTodo = await createTodoQuery(todo)
+    const [newTodo] = await db.insert(todosTable).values(todo).returning()
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -484,7 +412,9 @@ export async function getTodosAction(
   userId: string
 ): Promise<ActionState<SelectTodo[]>> {
   try {
-    const todos = await getTodosQuery(userId)
+    const todos = await db.query.todos.findMany({
+      where: eq(todosTable.userId, userId)
+    })
     return {
       isSuccess: true,
       message: "Todos retrieved successfully",
@@ -501,7 +431,12 @@ export async function updateTodoAction(
   data: Partial<InsertTodo>
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const updatedTodo = await updateTodoQuery(id, data)
+    const [updatedTodo] = await db
+      .update(todosTable)
+      .set(data)
+      .where(eq(todosTable.id, id))
+      .returning()
+
     return {
       isSuccess: true,
       message: "Todo updated successfully",
@@ -515,7 +450,7 @@ export async function updateTodoAction(
 
 export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
   try {
-    await deleteTodoQuery(id)
+    await db.delete(todosTable).where(eq(todosTable.id, id))
     return {
       isSuccess: true,
       message: "Todo deleted successfully",

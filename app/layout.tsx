@@ -2,9 +2,9 @@ import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/components/utilities/providers"
 import { TailwindIndicator } from "@/components/utilities/tailwind-indicator"
 import {
-  createProfileQuery,
-  getProfileByUserIdQuery
-} from "@/db/queries/profiles-queries"
+  createProfileAction,
+  getProfileByUserIdAction
+} from "@/actions/db/profiles-actions"
 import { cn } from "@/lib/utils"
 import { ClerkProvider } from "@clerk/nextjs"
 import { auth } from "@clerk/nextjs/server"
@@ -27,9 +27,9 @@ export default async function RootLayout({
   const { userId } = await auth()
 
   if (userId) {
-    const profile = await getProfileByUserIdQuery(userId)
-    if (!profile) {
-      await createProfileQuery({ userId })
+    const profileRes = await getProfileByUserIdAction(userId)
+    if (!profileRes.isSuccess) {
+      await createProfileAction({ userId })
     }
   }
 
