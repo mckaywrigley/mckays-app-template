@@ -4,7 +4,7 @@ Use the project specification and guidelines as you build the app.
 
 Write the complete code for every step. Do not get lazy.
 
-Your goal is to completely finish whatever the user asks for.
+Your goal is to completely finish whatever I ask for.
 
 ## Overview
 
@@ -43,8 +43,6 @@ This is a web app template.
 - `prompts` - Prompt files
 - `public` - Static assets
 - `types` - Type definitions
-
-### Project Specific Structure
 
 ## Rules
 
