@@ -1,19 +1,15 @@
 "use server"
 
-import {
-  createTodo,
-  deleteTodo,
-  getTodos,
-  updateTodo
-} from "@/db/queries/todos-queries"
-import { InsertTodo, SelectTodo } from "@/db/schema/todos-schema"
+import { db } from "@/db/db"
+import { InsertTodo, SelectTodo, todosTable } from "@/db/schema/todos-schema"
 import { ActionState } from "@/types"
+import { eq } from "drizzle-orm"
 
 export async function createTodoAction(
   todo: InsertTodo
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const newTodo = await createTodo(todo)
+    const [newTodo] = await db.insert(todosTable).values(todo).returning()
     return {
       isSuccess: true,
       message: "Todo created successfully",
@@ -29,7 +25,9 @@ export async function getTodosAction(
   userId: string
 ): Promise<ActionState<SelectTodo[]>> {
   try {
-    const todos = await getTodos(userId)
+    const todos = await db.query.todos.findMany({
+      where: eq(todosTable.userId, userId)
+    })
     return {
       isSuccess: true,
       message: "Todos retrieved successfully",
@@ -46,7 +44,12 @@ export async function updateTodoAction(
   data: Partial<InsertTodo>
 ): Promise<ActionState<SelectTodo>> {
   try {
-    const updatedTodo = await updateTodo(id, data)
+    const [updatedTodo] = await db
+      .update(todosTable)
+      .set(data)
+      .where(eq(todosTable.id, id))
+      .returning()
+
     return {
       isSuccess: true,
       message: "Todo updated successfully",
@@ -58,12 +61,14 @@ export async function updateTodoAction(
   }
 }
 
-export async function deleteTodoAction(
-  id: string
-): Promise<ActionState<void>> {
+export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
   try {
-    await deleteTodo(id)
-    return { isSuccess: true, message: "Todo deleted successfully", data: undefined }
+    await db.delete(todosTable).where(eq(todosTable.id, id))
+    return {
+      isSuccess: true,
+      message: "Todo deleted successfully",
+      data: undefined
+    }
   } catch (error) {
     console.error("Error deleting todo:", error)
     return { isSuccess: false, message: "Failed to delete todo" }
