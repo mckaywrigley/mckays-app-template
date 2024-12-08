@@ -1,4 +1,4 @@
-import { profilesTable, todosTable } from "@/db/schema"
+import { profilesTable, todosTable, subTodosTable } from "@/db/schema"
 import { config } from "dotenv"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
@@ -7,7 +7,8 @@ config({ path: ".env.local" })
 
 const schema = {
   profiles: profilesTable,
-  todos: todosTable
+  todos: todosTable,
+  sub_todos: subTodosTable
 }
 
 const client = postgres(process.env.DATABASE_URL!)

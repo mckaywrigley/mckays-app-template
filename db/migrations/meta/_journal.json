@@ -8,6 +8,13 @@
       "when": 1725104620592,
       "tag": "0000_nostalgic_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1733665167305,
+      "tag": "0001_yummy_franklin_storm",
+      "breakpoints": true
     }
   ]
 }
