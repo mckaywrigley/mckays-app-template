@@ -25,5 +25,9 @@ export default async function TodoPage() {
 
   const todos = await getTodosAction(userId)
 
-  return <TodoList userId={userId} initialTodos={todos.data ?? []} />
+  return (
+    <div className="flex-1 p-4 pt-0">
+      <TodoList userId={userId} initialTodos={todos.data ?? []} />
+    </div>
+  )
 }
