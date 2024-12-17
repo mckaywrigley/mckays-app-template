@@ -11,10 +11,15 @@ import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import { ChevronRight, Rocket } from "lucide-react"
 import Link from "next/link"
+import posthog from "posthog-js"
 import AnimatedGradientText from "../magicui/animated-gradient-text"
 import HeroVideoDialog from "../magicui/hero-video-dialog"
 
 export const HeroSection = () => {
+  const handleGetStartedClick = () => {
+    posthog.capture("clicked_get_started")
+  }
+
   return (
     <div className="flex flex-col items-center justify-center px-8 pt-32 text-center">
       <motion.div
@@ -68,7 +73,10 @@ export const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
         >
-          <Link href="https://github.com/mckaywrigley/mckays-app-template">
+          <Link
+            href="https://github.com/mckaywrigley/mckays-app-template"
+            onClick={handleGetStartedClick}
+          >
             <Button className="bg-blue-500 text-lg hover:bg-blue-600">
               <Rocket className="mr-2 size-5" />
               Get Started &rarr;
