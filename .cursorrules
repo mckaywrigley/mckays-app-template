@@ -14,8 +14,6 @@ This is a web app template.
 
 - Frontend: Next.js, Tailwind, Shadcn, Framer Motion
 - Backend: Postgres, Supabase, Drizzle ORM, Server Actions
-- Auth: Clerk
-- Payments: Stripe
 - Deployment: Vercel
 
 ## Project Structure
@@ -523,20 +521,3 @@ export async function deleteTodoAction(id: string): Promise<ActionState<void>> {
   }
 }
 ```
-
-### Auth Rules
-
-Follow these rules when working on auth.
-
-It uses Clerk for authentication.
-
-#### General Rules
-
-- Import the auth helper with `import { auth } from "@clerk/nextjs/server"` in server components
-- await the auth helper in server actions
-
-### Payments Rules
-
-Follow these rules when working on payments.
-
-It uses Stripe for payments.

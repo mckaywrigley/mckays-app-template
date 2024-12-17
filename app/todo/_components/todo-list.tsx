@@ -13,11 +13,10 @@ import { Trash2 } from "lucide-react"
 import { useState } from "react"
 
 interface TodoListProps {
-  userId: string
   initialTodos: SelectTodo[]
 }
 
-export function TodoList({ userId, initialTodos }: TodoListProps) {
+export function TodoList({ initialTodos }: TodoListProps) {
   const [newTodo, setNewTodo] = useState("")
   const [todos, setTodos] = useState(initialTodos)
 
@@ -25,7 +24,6 @@ export function TodoList({ userId, initialTodos }: TodoListProps) {
     if (newTodo.trim() !== "") {
       const newTodoData = {
         id: Date.now().toString(),
-        userId,
         content: newTodo,
         completed: false,
         createdAt: new Date(),
@@ -35,7 +33,6 @@ export function TodoList({ userId, initialTodos }: TodoListProps) {
       setNewTodo("")
 
       const result = await createTodoAction({
-        userId: userId,
         content: newTodo,
         completed: false
       })

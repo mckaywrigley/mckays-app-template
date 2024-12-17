@@ -1,19 +1,13 @@
 "use client"
 
-import { motion } from "framer-motion"
-import {
-  AppWindow,
-  Database,
-  DollarSign,
-  LucideIcon,
-  Shield
-} from "lucide-react"
 import {
   Card,
+  CardDescription,
   CardHeader,
-  CardTitle,
-  CardDescription
+  CardTitle
 } from "@/components/ui/card"
+import { motion } from "framer-motion"
+import { AppWindow, Database, LucideIcon } from "lucide-react"
 
 interface FeatureProps {
   title: string
@@ -31,16 +25,6 @@ const features: FeatureProps[] = [
     title: "Backend",
     description: "Postgres, Supabase, Drizzle ORM, Server Actions",
     icon: Database
-  },
-  {
-    title: "Auth",
-    description: "Clerk",
-    icon: Shield
-  },
-  {
-    title: "Payments",
-    description: "Stripe",
-    icon: DollarSign
   }
 ]
 

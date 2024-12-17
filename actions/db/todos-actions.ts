@@ -21,13 +21,9 @@ export async function createTodoAction(
   }
 }
 
-export async function getTodosAction(
-  userId: string
-): Promise<ActionState<SelectTodo[]>> {
+export async function getTodosAction(): Promise<ActionState<SelectTodo[]>> {
   try {
-    const todos = await db.query.todos.findMany({
-      where: eq(todosTable.userId, userId)
-    })
+    const todos = await db.query.todos.findMany({})
     return {
       isSuccess: true,
       message: "Todos retrieved successfully",
