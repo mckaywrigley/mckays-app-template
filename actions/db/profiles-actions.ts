@@ -1,3 +1,9 @@
+/*
+<ai_context>
+Contains server actions related to profiles in the DB.
+</ai_context>
+*/
+
 "use server"
 
 import { db } from "@/db/db"

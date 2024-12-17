@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This API route handles Stripe webhook events to manage subscription status changes and updates user profiles accordingly.
+</ai_context>
+*/
+
 import {
   manageSubscriptionStatusChange,
   updateStripeCustomer

@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This server layout provides a sidebar and breadcrumb navigation for the todo route. It wraps the todo page and its children.
+</ai_context>
+*/
+
 "use server"
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar"
@@ -44,6 +50,7 @@ export default async function TodoLayout({
             </Breadcrumb>
           </div>
         </header>
+
         {children}
       </SidebarInset>
     </SidebarProvider>

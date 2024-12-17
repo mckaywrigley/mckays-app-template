@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This server page displays pricing options for the product, integrating Stripe payment links.
+</ai_context>
+*/
+
 "use server"
 
 import { Button } from "@/components/ui/button"

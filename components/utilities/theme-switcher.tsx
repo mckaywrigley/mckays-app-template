@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides a theme switcher for the app.
+</ai_context>
+*/
+
 "use client"
 
 import { cn } from "@/lib/utils"

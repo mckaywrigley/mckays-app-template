@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides the sidebar for the app.
+</ai_context>
+*/
+
 "use client"
 
 import {

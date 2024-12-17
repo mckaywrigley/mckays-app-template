@@ -1,10 +1,12 @@
-# Project Instructions
+# AI Instructions
 
-Use the project specification and guidelines as you build the app.
+Use specification and guidelines as you build the app.
 
 Write the complete code for every step. Do not get lazy.
 
 Your goal is to completely finish whatever I ask for.
+
+You will see <ai_context> tags in the code. These are context tags that you should use to help you understand the codebase.
 
 ## Overview
 
@@ -42,11 +44,11 @@ This is a web app template.
 
 ## Rules
 
-Follow these rules when building the project.
+Follow these rules when building the app.
 
 ### General Rules
 
-- Use `@` to import anything from the project unless otherwise specified
+- Use `@` to import anything from the app unless otherwise specified
 - Use kebab case for all files and folders unless otherwise specified
 - Don't update shadcn components unless otherwise specified
 

@@ -1,3 +1,9 @@
+/*
+<ai_context>
+Defines the database schema for profiles.
+</ai_context>
+*/
+
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core"
 
 export const membershipEnum = pgEnum("membership", ["free", "pro"])
