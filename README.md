@@ -1,6 +1,12 @@
-# Mckay's App Template
+# Mckay's App Template (Simple)
 
 This is a full-stack app template for courses on [Takeoff](https://JoinTakeoff.com/).
+
+This is the `simple` branch without any auth or payments - great for quick projects!
+
+```bash
+git clone -b simple https://github.com/mckaywrigley/mckays-app-template.git
+```
 
 ## Sponsors
 
