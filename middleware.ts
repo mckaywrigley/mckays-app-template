@@ -1,6 +1,6 @@
 /*
 <ai_context>
-Contains the middleware for the app.
+Contains middleware for protecting routes, checking user authentication, and redirecting as needed.
 </ai_context>
 */
 

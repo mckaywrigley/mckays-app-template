@@ -1,6 +1,6 @@
 /*
 <ai_context>
-Contains the general server action types for the app.
+Contains the general server action types.
 </ai_context>
 */
 
