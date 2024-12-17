@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This server layout provides a shared header and basic structure for (marketing) routes.
+</ai_context>
+*/
+
 "use server"
 
 import Header from "@/components/header"

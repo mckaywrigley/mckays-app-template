@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component renders a Todo list with add, toggle, and delete functionality.
+</ai_context>
+*/
+
 "use client"
 
 import {

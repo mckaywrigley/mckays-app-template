@@ -1,5 +1,17 @@
+/*
+<ai_context>
+This client component provides the features section for the landing page.
+</ai_context>
+*/
+
 "use client"
 
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card"
 import { motion } from "framer-motion"
 import {
   AppWindow,
@@ -8,12 +20,6 @@ import {
   LucideIcon,
   Shield
 } from "lucide-react"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription
-} from "@/components/ui/card"
 
 interface FeatureProps {
   title: string

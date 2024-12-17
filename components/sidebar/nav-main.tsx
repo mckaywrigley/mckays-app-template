@@ -1,6 +1,11 @@
+/*
+<ai_context>
+This client component provides a main navigation for the sidebar.
+</ai_context>
+*/
+
 "use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,6 +21,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from "@/components/ui/sidebar"
+import { ChevronRight, type LucideIcon } from "lucide-react"
 
 export function NavMain({
   items

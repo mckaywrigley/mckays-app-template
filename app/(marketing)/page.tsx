@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This server page is the marketing homepage.
+</ai_context>
+*/
+
 "use server"
 
 import { FeaturesSection } from "@/components/landing/features"

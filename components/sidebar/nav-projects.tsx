@@ -1,12 +1,11 @@
+/*
+<ai_context>
+This client component provides a list of projects for the sidebar.
+</ai_context>
+*/
+
 "use client"
 
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon
-} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +22,13 @@ import {
   SidebarMenuItem,
   useSidebar
 } from "@/components/ui/sidebar"
+import {
+  Folder,
+  Forward,
+  MoreHorizontal,
+  Trash2,
+  type LucideIcon
+} from "lucide-react"
 
 export function NavProjects({
   projects

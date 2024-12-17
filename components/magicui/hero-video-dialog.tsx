@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides a video dialog for the hero section.
+</ai_context>
+*/
+
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"

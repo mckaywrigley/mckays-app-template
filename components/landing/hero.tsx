@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides the hero section for the landing page.
+</ai_context>
+*/
+
 "use client"
 
 import { Button } from "@/components/ui/button"

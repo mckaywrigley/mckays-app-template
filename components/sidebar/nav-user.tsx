@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides a user button for the sidebar via Clerk.
+</ai_context>
+*/
+
 "use client"
 
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar"

@@ -1,7 +1,16 @@
+/*
+<ai_context>
+Contains server actions related to Stripe.
+</ai_context>
+*/
+
+import {
+  updateProfileAction,
+  updateProfileByStripeCustomerIdAction
+} from "@/actions/db/profiles-actions"
+import { SelectProfile } from "@/db/schema"
 import { stripe } from "@/lib/stripe"
 import Stripe from "stripe"
-import { SelectProfile } from "@/db/schema"
-import { updateProfileAction, updateProfileByStripeCustomerIdAction } from "@/actions/db/profiles-actions"
 
 type MembershipStatus = SelectProfile["membership"]
 
@@ -88,10 +97,13 @@ export const manageSubscriptionStatusChange = async (
       membership
     )
 
-    const updateResult = await updateProfileByStripeCustomerIdAction(customerId, {
-      stripeSubscriptionId: subscription.id,
-      membership: membershipStatus
-    })
+    const updateResult = await updateProfileByStripeCustomerIdAction(
+      customerId,
+      {
+        stripeSubscriptionId: subscription.id,
+        membership: membershipStatus
+      }
+    )
 
     if (!updateResult.isSuccess) {
       throw new Error("Failed to update subscription status")

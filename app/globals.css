@@ -1,3 +1,9 @@
+/*
+<ai_context>
+Global styles for the app.
+</ai_context>
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
