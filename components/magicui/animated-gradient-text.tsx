@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides an animated gradient text.
+</ai_context>
+*/
+
 import { ReactNode } from "react"
 
 import { cn } from "@/lib/utils"

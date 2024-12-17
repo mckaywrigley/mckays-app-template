@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This client component provides the providers for the app.
+</ai_context>
+*/
+
 "use client"
 
 import { TooltipProvider } from "@/components/ui/tooltip"

@@ -1,3 +1,9 @@
+/*
+<ai_context>
+The root server layout for the app.
+</ai_context>
+*/
+
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/components/utilities/providers"
 import { TailwindIndicator } from "@/components/utilities/tailwind-indicator"

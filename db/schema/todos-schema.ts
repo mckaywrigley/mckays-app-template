@@ -1,3 +1,9 @@
+/*
+<ai_context>
+Defines the database schema for todos.
+</ai_context>
+*/
+
 import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
 
 export const todosTable = pgTable("todos", {

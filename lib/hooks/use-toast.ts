@@ -1,3 +1,9 @@
+/*
+<ai_context>
+Hook to display toast notifications.
+</ai_context>
+*/
+
 "use client"
 
 // Inspired by react-hot-toast library
@@ -188,4 +194,4 @@ function useToast() {
   }
 }
 
-export { useToast, toast }
+export { toast, useToast }

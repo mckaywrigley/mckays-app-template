@@ -1,3 +1,9 @@
+/*
+<ai_context>
+This server page retrieves user todos from the database and renders them in a list.
+</ai_context>
+*/
+
 "use server"
 
 import { getTodosAction } from "@/actions/db/todos-actions"
