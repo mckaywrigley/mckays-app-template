@@ -37,6 +37,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 - If no asynchronous logic is required for a given server component, you do not need to wrap the component in `<Suspense>`. You can simply return the final UI directly since there is no async boundary needed.
 - If asynchronous fetching is required, you can use a `<Suspense>` boundary and a fallback to indicate a loading state while data is loading.
 - Server components cannot be imported into client components. If you want to use a server component in a client component, you must pass the as props using the "children" prop
+- params in server pages should be awaited such as `const { courseId } = await params` where the type is `params: Promise<{ courseId: string }>`
 
 Example of a server layout:
 
