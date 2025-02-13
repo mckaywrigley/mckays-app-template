@@ -110,6 +110,7 @@ export async function ExampleServerComponent({
 
 - Use `"use client"` at the top of the file
 - Client components can safely rely on props passed down from server components, or handle UI interactions without needing <Suspense> if there’s no async logic.
+- Never use server actions in client components. If you need to create a new server action, create it in `/actions`
 
 Example of a client page:
 
