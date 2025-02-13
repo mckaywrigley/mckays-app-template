@@ -29,6 +29,7 @@
 # AI Specific
 .repo_ignore
 .cursorrules
+/.cursor
 
 # Project Specific
 **/.github
