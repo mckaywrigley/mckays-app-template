@@ -156,6 +156,7 @@ const schema = {
 - Actions should return a Promise<ActionState<T>>
 - Sort in CRUD order: Create, Read, Update, Delete
 - Make sure to return undefined as the data type if the action is not supposed to return any data
+- **Date Handling:** For columns defined as `PgDateString` (or any date string type), always convert JavaScript `Date` objects to ISO strings using `.toISOString()` before performing operations (e.g., comparisons or insertions). This ensures value type consistency and prevents type errors.
 
 ```ts
 export type ActionState<T> =

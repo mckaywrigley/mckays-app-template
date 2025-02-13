@@ -11,6 +11,7 @@ It uses Next.js, Tailwind, Shadcn, and Framer Motion.
 #### General Rules
 
 - Use `lucide-react` for icons
+- useSidebar must be used within a SidebarProvider
 
 #### Components
 
