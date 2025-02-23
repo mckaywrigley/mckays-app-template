@@ -14,7 +14,7 @@ import {
   SignUpButton,
   UserButton
 } from "@clerk/nextjs"
-import { Menu, Rocket, X } from "lucide-react"
+import { Menu, SquareActivity, X } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { ThemeSwitcher } from "./utilities/theme-switcher"
@@ -54,7 +54,7 @@ export default function Header() {
     >
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between p-4">
         <div className="flex items-center space-x-2 hover:cursor-pointer hover:opacity-80">
-          <Rocket className="size-6" />
+          <SquareActivity className="size-6" />
           <Link href="/" className="text-xl font-bold">
             BadBeats.org
           </Link>
