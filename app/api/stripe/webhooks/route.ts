@@ -1,13 +1,7 @@
-/*
-<ai_context>
-This API route handles Stripe webhook events to manage subscription status changes and updates user profiles accordingly.
-</ai_context>
-*/
-
 import {
   manageSubscriptionStatusChange,
   updateStripeCustomer
-} from "@/actions/stripe-actions"
+} from "@/actions/stripe"
 import { stripe } from "@/lib/stripe"
 import { headers } from "next/headers"
 import Stripe from "stripe"
@@ -30,9 +24,19 @@ export async function POST(req: Request) {
     }
 
     event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
-  } catch (err: any) {
-    console.error(`Webhook Error: ${err.message}`)
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 })
+  } catch (err) {
+    console.error(
+      `Webhook Error: ${err instanceof Error ? err.message : "Unknown error"}`
+    )
+    return new Response(
+      JSON.stringify({
+        error: err instanceof Error ? err.message : "Unknown error"
+      }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      }
+    )
   }
 
   if (relevantEvents.has(event.type)) {
@@ -53,9 +57,12 @@ export async function POST(req: Request) {
     } catch (error) {
       console.error("Webhook handler failed:", error)
       return new Response(
-        "Webhook handler failed. View your nextjs function logs.",
+        JSON.stringify({
+          error: "Webhook handler failed. View your function logs."
+        }),
         {
-          status: 400
+          status: 400,
+          headers: { "Content-Type": "application/json" }
         }
       )
     }
@@ -78,11 +85,16 @@ async function handleCheckoutSession(event: Stripe.Event) {
   const checkoutSession = event.data.object as Stripe.Checkout.Session
   if (checkoutSession.mode === "subscription") {
     const subscriptionId = checkoutSession.subscription as string
-    await updateStripeCustomer(
-      checkoutSession.client_reference_id as string,
-      subscriptionId,
-      checkoutSession.customer as string
-    )
+    const clientReferenceId = checkoutSession.client_reference_id
+    const customerId = checkoutSession.customer as string
+
+    if (!clientReferenceId) {
+      throw new Error(
+        "client_reference_id is required for subscription checkout"
+      )
+    }
+
+    await updateStripeCustomer(clientReferenceId, subscriptionId, customerId)
 
     const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ["default_payment_method"]

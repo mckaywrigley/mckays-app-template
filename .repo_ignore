@@ -29,12 +29,10 @@
 # AI Specific
 .repo_ignore
 .cursorrules
-/.cursor
 
 # Project Specific
 **/.github
 **/.husky
-**/prompts
 **/migrations
 **/public
 **/.next
