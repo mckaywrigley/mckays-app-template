@@ -1,0 +1,14 @@
+fastapi==0.104.1
+uvicorn==0.23.2
+python-multipart==0.0.6
+numpy==1.25.2
+pydantic==2.4.2
+requests==2.31.0
+pandas==1.5.3
+supabase==1.0.3
+pillow>=8.0.0
+
+# STEP file processing with pythonOCC
+# pythonocc-core==7.7.0 - already installed in conda environment
+
+

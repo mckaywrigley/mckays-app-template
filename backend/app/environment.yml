@@ -1,0 +1,17 @@
+name: occ-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - pythonocc-core
+  - numpy
+  - pillow
+  - pip:
+    - fastapi
+    - uvicorn
+    - requests
+    - python-multipart
+    - supabase
+    - pydantic
