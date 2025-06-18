@@ -14,7 +14,6 @@ const features = [
   "TypeScript",
   "Tailwind CSS",
   "Clerk",
-  "Stripe",
   "PostgreSQL",
   "Drizzle ORM",
   "PostHog"

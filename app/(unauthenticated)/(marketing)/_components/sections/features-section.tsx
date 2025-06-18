@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import {
   BarChart,
   Code2,
-  CreditCard,
   Database,
   Palette,
   Shield
@@ -17,12 +16,6 @@ const features = [
     description:
       "Clerk authentication pre-configured with protected routes, user management, and session handling.",
     icon: Shield
-  },
-  {
-    name: "Payments Integration",
-    description:
-      "Stripe integration with webhook support, subscription management, and checkout flows.",
-    icon: CreditCard
   },
   {
     name: "Database Setup",

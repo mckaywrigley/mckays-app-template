@@ -14,7 +14,7 @@ const faqs = [
   {
     question: "What's included in the template?",
     answer:
-      "Everything you need to build a production app: Next.js 15 with App Router, TypeScript, Tailwind CSS v4, shadcn/ui components, Clerk authentication, Stripe payments, PostgreSQL with Drizzle ORM, and PostHog analytics. All pre-configured and ready to use."
+      "Everything you need to build a production app: Next.js 15 with App Router, TypeScript, Tailwind CSS v4, shadcn/ui components, Clerk authentication, PostgreSQL with Drizzle ORM, and PostHog analytics. All pre-configured and ready to use."
   },
   {
     question: "How do I get started?",

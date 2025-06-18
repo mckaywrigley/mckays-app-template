@@ -8,35 +8,40 @@ import { eq } from "drizzle-orm"
 export async function getCustomerByUserId(
   userId: string
 ): Promise<SelectCustomer | null> {
-  const customer = await db.query.customers.findFirst({
-    where: eq(customers.userId, userId)
-  })
-
-  return customer || null
+  try {
+    const customer = await db.query.customers.findFirst({
+      where: eq(customers.userId, userId)
+    })
+    return customer || null
+  } catch (error) {
+    // Silently handle error and return null
+    return null
+  }
 }
 
-export async function getBillingDataByUserId(userId: string): Promise<{
+export async function getUserDataByUserId(userId: string): Promise<{
   customer: SelectCustomer | null
   clerkEmail: string | null
-  stripeEmail: string | null
 }> {
-  // Get Clerk user data
-  const user = await currentUser()
+  try {
+    // Get Clerk user data
+    const user = await currentUser()
 
-  // Get profile to fetch Stripe customer ID
-  const customer = await db.query.customers.findFirst({
-    where: eq(customers.userId, userId)
-  })
+    // Get customer profile
+    const customer = await db.query.customers.findFirst({
+      where: eq(customers.userId, userId)
+    })
 
-  // Get Stripe email if it exists
-  const stripeEmail = customer?.stripeCustomerId
-    ? user?.emailAddresses[0]?.emailAddress || null
-    : null
-
-  return {
-    customer: customer || null,
-    clerkEmail: user?.emailAddresses[0]?.emailAddress || null,
-    stripeEmail
+    return {
+      customer: customer || null,
+      clerkEmail: user?.emailAddresses[0]?.emailAddress || null
+    }
+  } catch (error) {
+    // Silently handle error and return default values
+    return {
+      customer: null,
+      clerkEmail: null
+    }
   }
 }
 
@@ -85,24 +90,4 @@ export async function updateCustomerByUserId(
   }
 }
 
-export async function updateCustomerByStripeCustomerId(
-  stripeCustomerId: string,
-  updates: Partial<SelectCustomer>
-): Promise<{ isSuccess: boolean; data?: SelectCustomer }> {
-  try {
-    const [updatedCustomer] = await db
-      .update(customers)
-      .set(updates)
-      .where(eq(customers.stripeCustomerId, stripeCustomerId))
-      .returning()
 
-    if (!updatedCustomer) {
-      return { isSuccess: false }
-    }
-
-    return { isSuccess: true, data: updatedCustomer }
-  } catch (error) {
-    console.error("Error updating customer by stripeCustomerId:", error)
-    return { isSuccess: false }
-  }
-}
