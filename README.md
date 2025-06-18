@@ -9,7 +9,6 @@ To learn how to use this template with the best AI tools & workflows, check out 
 - Frontend: [Next.js](https://nextjs.org/docs), [Tailwind](https://tailwindcss.com/docs/guides/nextjs), [Shadcn](https://ui.shadcn.com/docs/installation), [Framer Motion](https://www.framer.com/motion/introduction/)
 - Backend: [PostgreSQL](https://www.postgresql.org/about/), [Supabase](https://supabase.com/), [Drizzle](https://orm.drizzle.team/docs/get-started-postgresql), [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 - Auth: [Clerk](https://clerk.com/)
-- Payments: [Stripe](https://stripe.com/)
 
 ## Prerequisites
 
@@ -20,7 +19,6 @@ They all have free plans that you can use to get started.
 - Create a [GitHub](https://github.com/) account
 - Create a [Supabase](https://supabase.com/) account
 - Create a [Clerk](https://clerk.com/) account
-- Create a [Stripe](https://stripe.com/) account
 - Create a [Vercel](https://vercel.com/) account
 
 You will likely not need paid plans unless you are building a business.
@@ -38,11 +36,7 @@ CLERK_SECRET_KEY=
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/login # do not change
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/signup # do not change
 
-# Stripe
-STRIPE_SECRET_KEY=
-STRIPE_WEBHOOK_SECRET=
-NEXT_PUBLIC_STRIPE_PAYMENT_LINK_YEARLY=
-NEXT_PUBLIC_STRIPE_PAYMENT_LINK_MONTHLY=
+# No payment provider configured
 ```
 
 ## Setup

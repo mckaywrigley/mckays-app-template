@@ -124,7 +124,7 @@ $ npm run dev
               "Next.js 15",
               "Tailwind CSS",
               "Clerk Auth",
-              "Stripe"
+              "PostgreSQL"
             ].map((tech, index) => (
               <motion.span
                 key={tech}
